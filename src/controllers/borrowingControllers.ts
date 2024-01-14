@@ -6,16 +6,8 @@ import client from '../database/dbClient';
 export const addBorrowing = asyncHandler(async (req: express.Request, res: express.Response) => {
 	const { borrowerId, bookIsbn } = req.params;
 
-	// check if the borrower's id is not correct
-	let query = `SELECT EXISTS(SELECT 1 FROM borrower WHERE borrower_id = ${borrowerId});`;
-	const borrowerFound = (await client.query(query)).rows[0].exists;
-	if (!borrowerFound) {
-		res.status(400).json({ error: `No borrowers found with ID: ${borrowerId}`});
-		return;
-	}
-
 	// check if the book's ISBN is not correct OR there no books left
-	query = `SELECT available_quantity FROM book WHERE isbn = '${bookIsbn}';`;
+	let query = `SELECT available_quantity FROM book WHERE isbn = '${bookIsbn}';`;
 	const data = (await client.query(query)).rows[0];
 	if (!data) {
 		res.status(400).json({ error: `No books found with ISBN: ${bookIsbn}`});
@@ -58,22 +50,7 @@ export const addBorrowing = asyncHandler(async (req: express.Request, res: expre
 export const returnBook = asyncHandler(async (req: express.Request, res: express.Response) => {
 	const { borrowerId, bookIsbn } = req.params;
 
-	// check if the borrower's id is not correct
-	let query = `SELECT EXISTS(SELECT 1 FROM borrower WHERE borrower_id = ${borrowerId});`;
-	const borrowerFound = (await client.query(query)).rows[0].exists;
-	if (!borrowerFound) {
-		res.status(400).json({ error: `No borrowers found with ID: ${borrowerId}`});
-		return;
-	}
-
-	// check if the book's ISBN is not correct
-	query = `SELECT EXISTS(SELECT 1 FROM book WHERE isbn = '${bookIsbn}');`;
-	const bookFound = (await client.query(query)).rows[0].exists;
-	if (!bookFound) {
-		res.status(400).json({ error: `No books found with ISBN: ${bookIsbn}`});
-		return;
-	}
-	
+	let query = '';
 	try {
 		await client.query('BEGIN;');
 		query = `DELETE FROM borrowing WHERE borrower_id = ${borrowerId} AND book_isbn = '${bookIsbn}';`;
@@ -97,15 +74,7 @@ export const returnBook = asyncHandler(async (req: express.Request, res: express
 export const getBorrowedBooks = asyncHandler(async (req: express.Request, res: express.Response) => {
 	const { borrowerId } = req.params;
 
-	// check if the borrower's id is not correct
-	let query = `SELECT EXISTS(SELECT 1 FROM borrower WHERE borrower_id = ${borrowerId});`;
-	const borrowerFound = (await client.query(query)).rows[0].exists;
-	if (!borrowerFound) {
-		res.status(400).json({ error: `No borrowers found with ID: ${borrowerId}`});
-		return;
-	}
-
-	query = `SELECT * FROM borrowing WHERE borrower_id = ${borrowerId};`;
+	const query = `SELECT * FROM borrowing WHERE borrower_id = ${borrowerId};`;
 	const borrowings = (await client.query(query)).rows;
 
 	res.json({ borrowings });
