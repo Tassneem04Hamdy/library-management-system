@@ -28,6 +28,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 				process.exit(1);
 			});
 
+		// 404 handler
+		app.use((_req: express.Request, res: express.Response, _next: express.NextFunction) => {
+			res.status(404).json({
+				status: 404,
+				message: 'Page not found!'
+			});
+		});
+
+		// error handler
+		app.use(((err, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+			res.status(err.status).json({
+				status: err.status,
+				message: err.message
+			});
+
+		}) as express.ErrorRequestHandler);
+
 	} catch (error) {
 		console.log(`Error! ${error}`);
 		process.exit(1);
