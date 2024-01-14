@@ -4,12 +4,15 @@ import bodyParser from 'body-parser';
 require('dotenv').config();
 
 import client from './database/dbClient';
+import bookRouter from './routes/booksRoutes';
 
 const app: express.Application = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/books', bookRouter);
 
 (async function () {
 
