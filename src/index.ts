@@ -5,6 +5,7 @@ require('dotenv').config();
 
 import client from './database/dbClient';
 import bookRouter from './routes/booksRoutes';
+import borrowerRouter from './routes/borrowerRoutes';
 
 const app: express.Application = express();
 const port = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/books', bookRouter);
+app.use('/borrowers', borrowerRouter);
 
 (async function () {
 
