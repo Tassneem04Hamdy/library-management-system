@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 require('dotenv').config();
 
 import client from './database/dbClient';
+import authRouter from './routes/authRoutes';
 import bookRouter from './routes/booksRoutes';
 import borrowerRouter from './routes/borrowerRoutes';
 import borrowingRouter from './routes/borrowingRoutes';
@@ -14,6 +15,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/auth', authRouter);
 app.use('/books', bookRouter);
 app.use('/borrowers', borrowerRouter);
 app.use('/borrowings', borrowingRouter);

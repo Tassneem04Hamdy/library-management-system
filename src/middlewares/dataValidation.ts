@@ -12,6 +12,17 @@ export const validate = (validationSchema: string)  =>
 		}
 	};
 
+const signUpSchema: z.ZodSchema = z.object({
+	libraryName: z.string(),
+	username: z.string(),
+	password: z.string(),
+}).strict();
+
+const signInSchema: z.ZodSchema = z.object({
+	username: z.string(),
+	password: z.string(),
+}).strict();
+
 const addBookSchema: z.ZodSchema = z.object({
 	isbn: z.string(),
 	title: z.string(),
@@ -43,6 +54,8 @@ const getOverdueBorrowings: z.ZodSchema = z.object({
 }).strict();
 
 const validationSchemas: { [id: string]: z.ZodSchema }= {
+	'signUpSchema': signUpSchema,
+	'signInSchema': signInSchema,
 	'addBookSchema': addBookSchema,
 	'updateBookSchema': updateBookSchema,
 	'addBorrowerSchema': addBorrowerSchema,
