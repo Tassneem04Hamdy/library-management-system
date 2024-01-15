@@ -6,8 +6,17 @@ export const checkExistence = (fields: string[])  =>
 	async (req: express.Request, res: express.Response, next: express.NextFunction) => {
 		try {
 			for (const field of fields) {
-				const value = req.params[field] || req.body[field];
-				const query = `SELECT EXISTS(SELECT 1 FROM ${data[field].table} WHERE ${data[field].column} = '${value}');`;
+				const value = field === 'bookBorrowed' ? req.params['bookIsbn'] : 
+					field === 'borrowerBorrowing' ? req.params['borrowerId'] : 
+						req.params[field] || req.body[field];
+				// const value = req.params[field] || req.body[field];
+
+				let query = `SELECT EXISTS(SELECT 1 FROM ${data[field].table} WHERE ${data[field].column} = '${value}'`;
+				if (field !== 'libraryName' && field !== 'username') {
+					query += ` AND library_id = '${req.libraryId}'`;
+				}
+				query += ');';
+				
 				const isFound = (await client.query(query)).rows[0].exists;
 				if (data[field].expected !== isFound) {
 					res.status(400).json({ error: `${data[field].errorMsg} ${value}`});
@@ -21,6 +30,20 @@ export const checkExistence = (fields: string[])  =>
 	};
 
 const data: { [id: string]: { table: string, column: string, errorMsg: string, expected: boolean } } = {
+	'libraryName': {
+		table: 'library',
+		column: 'library_name',
+		errorMsg: 'This library already exists, library name:',
+		expected: false,
+	},
+	
+	'username': {
+		table: 'library',
+		column: 'username',
+		errorMsg: 'This user already exists, username:',
+		expected: false,
+	},
+
 	'isbn': { 
 		table: 'book',
 		column: 'isbn',
