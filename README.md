@@ -1,5 +1,5 @@
 # Library Management System
-A simple library management system to manage books and borrowers.
+A simple library management system that manage books and borrowers.
 
 <br/>
 
@@ -15,7 +15,7 @@ A simple library management system to manage books and borrowers.
 <br/>
 
 ## Running the server
-1. To run the server, the first step is downloading and installing [NodeJS](https://nodejs.org/en/download) and [Postgresql](https://www.postgresql.org/download/) on your machine. <br/>
+1. To run the server, the first step is to download and install [NodeJS](https://nodejs.org/en/download) and [Postgresql](https://www.postgresql.org/download/) on your machine. <br/>
 
 2. Run the database script in the [database.sql](https://github.com/Tassneem04Hamdy/library-management-system/blob/main/src/database/database.sql) file.
 
